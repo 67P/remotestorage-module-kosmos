@@ -1,12 +1,3 @@
-/**
- * File: Kosmos
- *
- * Maintainer: - Sebastian Kippe <sebastian@kip.pe>
- * Version:    - 0.1.0
- *
- * This module manages data related to the Kosmos group communication suite
- */
-
 var RemoteStorage = require('remotestoragejs');
 
 RemoteStorage.defineModule('kosmos', function(privateClient/*, publicClient*/) {
