@@ -1,6 +1,6 @@
 var RemoteStorage = require('remotestoragejs');
 
-RemoteStorage.defineModule('kosmos', function(privateClient/*, publicClient*/) {
+var Kosmos = function(privateClient/*, publicClient*/) {
 
   var extend = RemoteStorage.util.extend;
 
@@ -101,4 +101,6 @@ RemoteStorage.defineModule('kosmos', function(privateClient/*, publicClient*/) {
 
   return { exports: kosmos };
 
-});
+};
+
+export default { name: 'kosmos', builder: Kosmos };
