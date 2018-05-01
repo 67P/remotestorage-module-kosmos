@@ -63,6 +63,9 @@ var Kosmos = function(privateClient/*, publicClient*/) {
         "type": "array",
         "default": []
       },
+      "botkaURL": {
+        "type": "string"
+      }
     }, baseProperties),
     "required": ["id", "name", "protocol", "server"]
   });
