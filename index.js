@@ -1,40 +1,28 @@
-var RemoteStorage = require('remotestoragejs');
-
-var Kosmos = function(privateClient/*, publicClient*/) {
-
-  var extend = RemoteStorage.util.extend;
+const Kosmos = function(privateClient/*, publicClient*/) {
 
   //
   // Types/Schemas
   //
 
-  var baseProperties = {
-    "id": {
-      "type": "string"
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "updatedAt": {
-      "type": "string",
-      "format": "date-time"
-    }
-  };
-
-  privateClient.declareType('space', {
+  privateClient.declareType('chat-account', {
     "type": "object",
-    "properties": extend({
+    "properties": {
       "id": {
-        "type": "string",
-      },
-      "name": {
         "type": "string",
       },
       "protocol": {
         "type": "string",
         "default": "IRC",
-        "enum": ["IRC", "XMPP", "Mattermost", "Slack"]
+        "enum": ["IRC", "XMPP"] // Mattermost, Slack, ...
+      },
+      "username": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "nickname": {
+        "type": "string"
       },
       "server": {
         "type": "object",
@@ -47,49 +35,45 @@ var Kosmos = function(privateClient/*, publicClient*/) {
           },
           "secure": {
             "type": "boolean"
-          },
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "nickname": {
-            "type": "string"
-          },
+          }
         }
-      },
-      "channels": {
-        "type": "array",
-        "default": []
       },
       "botkaURL": {
         "type": "string"
-      }
-    }, baseProperties),
-    "required": ["id", "name", "protocol", "server"]
+      },
+      ...timestampProperties
+    },
+    "required": [
+      "id",
+      "protocol"
+    ]
   });
 
   //
   // Public functions
   //
 
-  var kosmos = {
+  const kosmos = {
 
-    spaces: {
+    accounts: {
 
-      getAll() {
-        return privateClient.getAll('spaces/');
+      getIds() {
+        return privateClient.getListing('chat/').then(listing => {
+          return Object.keys(listing.items);
+        });
       },
 
-      store(params) {
-        if (!params.createdAt) { params.createdAt = new Date().toISOString(); }
-
-        return privateClient.storeObject('space', `spaces/${params.id}`, params);
+      getConfig(id) {
+        return privateClient.getAll(`chat/${id}/account`);
       },
 
+      storeConfig(obj) {
+        return privateClient.storeObject('chat-account', `chat/${obj.id}/account`, obj);
+      },
+
+      // TODO recursively remove all files
       remove(id) {
-        return privateClient.remove(`spaces/${id}`);
+        return privateClient.remove(`chat/${id}/account`);
       }
 
     },
