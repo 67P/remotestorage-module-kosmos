@@ -11,6 +11,9 @@
   },
   "author": "Kosmos Contributors <mail@kosmos.org> (https://kosmos.org)",
   "license": "MIT",
+  "dependencies": {
+    "remotestoragejs": "^2.0.0-beta.0"
+  },
   "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
