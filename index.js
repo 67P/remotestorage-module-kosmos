@@ -63,7 +63,7 @@ const Kosmos = function(privateClient/*, publicClient*/) {
       },
 
       getConfig(id) {
-        return privateClient.getAll(`chat/${id}/account`);
+        return privateClient.getObject(`chat/${id}/account`);
       },
 
       storeConfig(obj) {
