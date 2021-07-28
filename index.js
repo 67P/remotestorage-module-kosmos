@@ -40,8 +40,7 @@ const Kosmos = function(privateClient/*, publicClient*/) {
       },
       "botkaURL": {
         "type": "string"
-      },
-      ...timestampProperties
+      }
     },
     "required": [
       "id",
