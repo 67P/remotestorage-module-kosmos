@@ -58,7 +58,7 @@ const Kosmos = function(privateClient/*, publicClient*/) {
 
       getIds() {
         return privateClient.getListing('chat/').then(listing => {
-          return Object.keys(listing.items);
+          return Object.keys(listing);
         });
       },
 
