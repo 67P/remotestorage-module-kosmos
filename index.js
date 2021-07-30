@@ -16,22 +16,22 @@ const Kosmos = function(privateClient/*, publicClient*/) {
         "enum": ["IRC", "XMPP"] // Mattermost, Slack, ...
       },
       "username": {
-        "type": "string"
+        "type": [ "string", "null" ]
       },
       "password": {
-        "type": "string"
+        "type": [ "string", "null" ]
       },
       "nickname": {
-        "type": "string"
+        "type": [ "string", "null" ]
       },
       "server": {
         "type": "object",
         "properties": {
           "hostname": {
-            "type": "string"
+          "type": [ "string", "null" ]
           },
           "port": {
-            "type": "number"
+            "type": [ "number", "null" ]
           },
           "secure": {
             "type": "boolean"
@@ -39,7 +39,7 @@ const Kosmos = function(privateClient/*, publicClient*/) {
         }
       },
       "botkaURL": {
-        "type": "string"
+        "type": [ "string", "null" ]
       }
     },
     "required": [
