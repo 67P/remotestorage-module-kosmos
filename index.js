@@ -48,6 +48,28 @@ const Kosmos = function(privateClient/*, publicClient*/) {
     ]
   });
 
+  privateClient.declareType('chat-channel', {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+      },
+      "accountId": {
+        "type": "string"
+      },
+      "displayName": {
+        "type": [ "string", "null" ]
+      },
+      "userNickname": {
+        "type": [ "string", "null" ]
+      }
+    },
+    "required": [
+      "id",
+      "accountId"
+    ]
+  });
+
   //
   // Public functions
   //
@@ -55,7 +77,6 @@ const Kosmos = function(privateClient/*, publicClient*/) {
   const kosmos = {
 
     accounts: {
-
       getIds() {
         return privateClient.getListing('chat/').then(listing => {
           return Object.keys(listing).map(id => id.replace(/\/$/, ''));
@@ -74,7 +95,20 @@ const Kosmos = function(privateClient/*, publicClient*/) {
       remove(id) {
         return privateClient.remove(`chat/${id}/account`);
       }
+    },
 
+    channels: {
+      getAll(accountId) {
+        return privateClient.getAll(`chat/${accountId}/channels/`);
+      },
+
+      store(obj) {
+        return privateClient.storeObject('chat-channel', `chat/${obj.accountId}/channels/${obj.id}`, obj);
+      },
+
+      remove(accountId, id) {
+        return privateClient.remove(`chat/${accountId}/${id}`);
+      }
     },
 
     // TODO remove
