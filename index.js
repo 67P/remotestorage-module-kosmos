@@ -107,7 +107,7 @@ const Kosmos = function(privateClient/*, publicClient*/) {
       },
 
       remove(accountId, id) {
-        return privateClient.remove(`chat/${accountId}/${id}`);
+        return privateClient.remove(`chat/${accountId}/channels/${id}`);
       }
     },
 
