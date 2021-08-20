@@ -62,6 +62,9 @@ const Kosmos = function(privateClient/*, publicClient*/) {
       },
       "userNickname": {
         "type": [ "string", "null" ]
+      },
+      "topic": {
+        "type": [ "string", "null" ]
       }
     },
     "required": [
