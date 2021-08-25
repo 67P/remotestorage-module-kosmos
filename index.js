@@ -1,97 +1,117 @@
-var RemoteStorage = require('remotestoragejs');
-
-var Kosmos = function(privateClient/*, publicClient*/) {
-
-  var extend = RemoteStorage.util.extend;
+const Kosmos = function(privateClient/*, publicClient*/) {
 
   //
   // Types/Schemas
   //
 
-  var baseProperties = {
-    "id": {
-      "type": "string"
-    },
-    "createdAt": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "updatedAt": {
-      "type": "string",
-      "format": "date-time"
-    }
-  };
-
-  privateClient.declareType('space', {
+  privateClient.declareType('chat-account', {
     "type": "object",
-    "properties": extend({
+    "properties": {
       "id": {
-        "type": "string",
-      },
-      "name": {
         "type": "string",
       },
       "protocol": {
         "type": "string",
         "default": "IRC",
-        "enum": ["IRC", "XMPP", "Mattermost", "Slack"]
+        "enum": ["IRC", "XMPP"] // Mattermost, Slack, ...
+      },
+      "username": {
+        "type": [ "string", "null" ]
+      },
+      "password": {
+        "type": [ "string", "null" ]
+      },
+      "nickname": {
+        "type": [ "string", "null" ]
       },
       "server": {
         "type": "object",
         "properties": {
           "hostname": {
-            "type": "string"
+          "type": [ "string", "null" ]
           },
           "port": {
-            "type": "number"
+            "type": [ "number", "null" ]
           },
           "secure": {
             "type": "boolean"
-          },
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "nickname": {
-            "type": "string"
-          },
+          }
         }
       },
-      "channels": {
-        "type": "array",
-        "default": []
-      },
       "botkaURL": {
-        "type": "string"
+        "type": [ "string", "null" ]
       }
-    }, baseProperties),
-    "required": ["id", "name", "protocol", "server"]
+    },
+    "required": [
+      "id",
+      "protocol"
+    ]
+  });
+
+  privateClient.declareType('chat-channel', {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+      },
+      "accountId": {
+        "type": "string"
+      },
+      "displayName": {
+        "type": [ "string", "null" ]
+      },
+      "userNickname": {
+        "type": [ "string", "null" ]
+      },
+      "topic": {
+        "type": [ "string", "null" ]
+      }
+    },
+    "required": [
+      "id",
+      "accountId"
+    ]
   });
 
   //
   // Public functions
   //
 
-  var kosmos = {
+  const kosmos = {
 
-    spaces: {
-
-      getAll() {
-        return privateClient.getAll('spaces/');
+    accounts: {
+      getIds() {
+        return privateClient.getListing('chat/').then(listing => {
+          return Object.keys(listing).map(id => id.replace(/\/$/, ''));
+        });
       },
 
-      store(params) {
-        if (!params.createdAt) { params.createdAt = new Date().toISOString(); }
-
-        return privateClient.storeObject('space', `spaces/${params.id}`, params);
+      getConfig(id) {
+        return privateClient.getObject(`chat/${id}/account`);
       },
 
+      storeConfig(obj) {
+        return privateClient.storeObject('chat-account', `chat/${obj.id}/account`, obj);
+      },
+
+      // TODO recursively remove all files
       remove(id) {
-        return privateClient.remove(`spaces/${id}`);
+        return privateClient.remove(`chat/${id}/account`);
       }
+    },
 
+    channels: {
+      getAll(accountId) {
+        return privateClient.getAll(`chat/${accountId}/channels/`);
+      },
+
+      store(obj) {
+        return privateClient.storeObject('chat-channel', `chat/${obj.accountId}/channels/${obj.id}`, obj);
+      },
+
+      remove(accountId, id) {
+        return privateClient.remove(`chat/${accountId}/channels/${id}`);
+      }
     },
 
     // TODO remove
