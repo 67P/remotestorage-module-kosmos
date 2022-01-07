@@ -65,6 +65,12 @@ const Kosmos = function(privateClient/*, publicClient*/) {
       },
       "topic": {
         "type": [ "string", "null" ]
+      },
+      "description": {
+        "type": [ "string", "null" ]
+      },
+      "isLogged": {
+        "type": [ "boolean", "null" ]
       }
     },
     "required": [
